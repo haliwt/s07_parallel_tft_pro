@@ -1,9 +1,9 @@
 #include "bsp_adc.h"
 #include "bsp.h"
 
-static uint16_t Get_Adc_Channel(uint32_t ch,uint32_t rank) ;
+static uint16_t Get_Adc_Channel(uint32_t ch) ;
 
-static uint16_t Get_Adc_Average(uint32_t ch,uint32_t,uint8_t times);
+static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times);
 
 static void Judge_PTC_Temperature_Value(uint16_t adc_ptc);
 
@@ -11,6 +11,9 @@ static void Judge_Fan_State(uint16_t adc_value);
 
 uint16_t ptc_temp_voltage;
 uint16_t fan_detect_voltage;
+
+uint8_t detect_error_times=0;
+
 /*****************************************************************
 *
 	*Function Name: static uint16_t Get_Adc(uint32_t ch)  
@@ -20,18 +23,16 @@ uint16_t fan_detect_voltage;
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Channel(uint32_t ch,uint32_t rank)   
+static uint16_t Get_Adc_Channel(uint32_t ch)   
 {
-    ADC_ChannelConfTypeDef adc_channel;
+    ADC_ChannelConfTypeDef ADC1_ChanConf;
 
-	 /* ÅäÖÃ¶ÔÓ¦ADCÍ¨µÀ */
-   
-    adc_channel.Channel = ch;               /* ÉèÖÃADCX¶ÔÍ¨µÀch */
-    adc_channel.Rank = rank;                /* ÉèÖÃ²ÉÑùÐòÁÐ */
-	adc_channel.Offset = 0;
-    adc_channel.SamplingTime = ADC_SAMPLETIME_3CYCLES;       /* ÉèÖÃ²ÉÑùÊ±¼ä */
-           
-    HAL_ADC_ConfigChannel(&hadc1,&adc_channel);        //Í¨µÀÅäÖÃ
+	ADC1_ChanConf.Channel=ch;                                   //Í¨µÀ
+    ADC1_ChanConf.Rank= ADC_REGULAR_RANK_1;                                    //第一个序列
+    ADC1_ChanConf.SamplingTime=ADC_SAMPLETIME_1CYCLE_5;//ADC_SAMPLETIME_239CYCLES_5;      //²ÉÑùÊ±¼ä               
+
+
+	HAL_ADC_ConfigChannel(&hadc1,&ADC1_ChanConf);        //Í¨µÀÅäÖÃ
 	
     HAL_ADC_Start(&hadc1);                               //start ADC transmit
 	
@@ -48,26 +49,26 @@ static uint16_t Get_Adc_Channel(uint32_t ch,uint32_t rank)
 	*
 	*
 *****************************************************************/
-static uint16_t Get_Adc_Average(uint32_t ch,uint32_t rank,uint8_t times)
+static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
 {
 	uint32_t temp_val=0;
 	uint8_t t;
 	for(t=0;t<times;t++)
 	{
-		temp_val+=Get_Adc_Channel(ch,rank);
+		temp_val+=Get_Adc_Channel(ch);
 		delay_ms(5);
 	}
 	return temp_val/times;
 } 
 
 
-//ADC_CHANNEL_1 PTC
-void Get_PTC_Temperature_Voltage(void)
+
+void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
 {
     static uint8_t times_i;
 	uint16_t adcx;
 	
-	adcx = Get_Adc_Average(ADC_CHANNEL_1,2,10);
+	adcx = Get_Adc_Average(channel,times);
 
     ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
 
@@ -98,8 +99,8 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
   
 	
   // if(adc_ptc < 373 || adc_ptc ==373){ //90 degree
-  //if(adc_ptc < 295 || adc_ptc == 295){   //100 degree
-  if(adc_ptc < 194 || adc_ptc == 194){   //118 degree
+  if(adc_ptc < 295 || adc_ptc == 295){   //50 degree //50 degree
+
 
 		gctl_t.ptc_flag=0 ;
 		PTC_SetLow(); //turn off
@@ -129,13 +130,13 @@ static void Judge_PTC_Temperature_Value(uint16_t adc_ptc)
 	*
 	*
 *****************************************************************/
-void Get_Fan_Adc_Fun(void)
+void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
 {
 	uint16_t adc_fan_hex;
 	
+	static uint8_t detect_error_times;
 	
-	
-	adc_fan_hex = Get_Adc_Average(ADC_CHANNEL_0,1,5);
+	adc_fan_hex = Get_Adc_Average(channel,times);
 
     fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
 	HAL_Delay(5);
@@ -172,7 +173,73 @@ static void Judge_Fan_State(uint16_t adc_value)
 		detect_error_times++;
 
      }
+
+
+
 }
+#if 0
+/*****************************************************************
+	*
+	*Function Name: void Get_Fan_Adc_Fun(uint8_t channel,uint8_t times)
+	*Function ADC input channel be selected "which one channe"
+	*Input Ref: which one ? AC_Channel_?, hexadecimal of average
+	*Return Ref: No
+	*
+	*
+*****************************************************************/
+void Get_Fan_Adc_Fun(uint32_t channel,uint8_t times)
+{
+   uint16_t adc_fan_hex;
+  // Fan_Full_Speed();
+   adc_fan_hex = Get_Adc_Average(channel,times);
+
+    fan_detect_voltage  =(uint16_t)((adc_fan_hex * 3300)/4096); //amplification 1000 ,3.111V -> 3111
+	//HAL_Delay(2);
+
+//	if(fan_detect_voltage >500 && fan_detect_voltage < 1700){
+//           detect_error_times=0;
+//		  
+////		   Publish_Data_Warning(fan_warning,no_warning); //don't has warning .
+////		   HAL_Delay(350);
+////		   SendWifiCmd_To_Order(FAN_REMOVE_ERROR); //0xE1,
+////		    HAL_Delay(5);
+////		  run_t.fan_warning = 0;
+////		   
+//    }
+//    else{
 
 
+  if(fan_detect_voltage < 350){ //500  now and then is bug false alarm rate  .
+       detect_error_times++;
+	   if(detect_error_times >1){
+	   	
+		 
+		//   run_t.fan_warning = 1;
+		   
+		   Publish_Data_Warning(fan_warning,warning);
+	       HAL_Delay(350);
+		 
+	    
+	      
+		   Buzzer_KeySound();
+	       HAL_Delay(100);
+		   Buzzer_KeySound();
+	       HAL_Delay(100);
+		   Buzzer_KeySound();
+	       HAL_Delay(100);
+		 
+       //    SendWifiCmd_To_Order(FAN_ERROR); //0xE1,
+            HAL_Delay(5);
 
+	       MqttData_Publis_SetFan(0);
+	       HAL_Delay(350);
+        //   SendWifiCmd_To_Order(FAN_ERROR); //0xE1,
+
+		 //   Publish_Data_Warning(fan_warning,warning);
+	     //  HAL_Delay(350);
+		}
+	          
+
+     }
+}
+#endif 

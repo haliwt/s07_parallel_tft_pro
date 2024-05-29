@@ -42,11 +42,11 @@ static void TFT_Parallel_WriteByte(uint8_t txdata);
 static void St7789v_Send_Byte(uint8_t chData);
 
 
-//static uint8_t SPI_WriteByte(uint8_t *txdata,uint16_t size);
+
 //static uint8_t lcd_buf[LCD_Buf_Size];
 
-static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
-static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
+//static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
+//static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2);
 
 
 uint8_t spi_it_tx[1];
@@ -309,110 +309,9 @@ void DISP_WINDOWS(void)
 		
         }
 }
-/*******************************************************************************
- * 
- * Function Name: void DISP_WINDOWS(void)
- * Function : display TFT color
- * Input Ref: NO
- * Return Ref: NO
- * 
-********************************************************************************/
-static void LCD_Write_Data1(uint8_t dat1,uint8_t dat2)
-{
- 	
-      //A0=1;
-     // CSB=0;
-     TFT_DCX_DATA();
-    // LCD_NSS_SetLow();
-	 SPI_WriteByte(&dat1,1);
-      
-	//CSB=1;
-	//LCD_NSS_SetHigh();
-
-	 // CSB=0;
-	//LCD_NSS_SetLow();
-	 
-     SPI_WriteByte(&dat2,1);
-     
-	// CSB=1;
-	 //LCD_NSS_SetHigh();
-     
-  
-}
-
-/*******************************************************************************
- * 
- * Function Name: void DISP_WINDOWS(void)
- * Function : display TFT color
- * Input Ref: NO
- * Return Ref: NO
- * 
-********************************************************************************/
-void DISPLAY_image(void)
-{
-	uint16_t i,j;
-	static uint16_t p,q;
 
 
-	
-	TFT_DCX_DATA();
-//    LCD_NSS_SetLow();
-	DISP_WINDOWS();
-//   	for(i=0;i<80;i++)
-//	{
-//		for(j=0;j<240;j++)
-//		{
-//			LCD_Write_Data(BLACK); 
-//		}
-//	}
-	for(i=0;i<320;i++)
-	{
-//		for(j=0;j<56;j++)
-//		{
-//			LCD_Write_Data(BLACK);
-//		}
-		q=0;
 
-		for(j=0;j<240;j++)
-		{
-            
-			if(p<4440 && j< 121){
-			//LCD_Write_Data1(gImage_s07_main_picture[p],gImage_s07_main_picture[p+1]);
-			LCD_Write_Data1(gImage_s07_temp[p],gImage_s07_temp[p+1]);
-			p++;
-			q++;
-
-			}
-            else{
-				p++;
-			   LCD_Write_Data(BLACK >> 8);
-			    LCD_Write_Data(BLACK);
-               if(p==76800)p=0;
-
-            }
-			 
-
-         }
-			
-			 
-	}   
-	     	
-	
-//		for(j=0;j<56;j++)
-//			{
-//		       LCD_Write_Data(BLACK);
-// 			}
-//	}
-//	for(i=0;i<80;i++)
-//	{
-//		for(j=0;j<240;j++)
-//		{
-//			LCD_Write_Data(BLACK); 
-//		}
-//	}
- 
-	//HOLD_DISP ();
-}
 
 
 /*******************************************************************************

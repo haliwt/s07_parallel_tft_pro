@@ -59,7 +59,7 @@ void Temperature_Ptc_Pro_Handler(void)
 		   if(gctl_t.gTimer_ctl_ptc_adc_times > 4 ){
               gctl_t.gTimer_ctl_ptc_adc_times =0;
 
-			 Get_PTC_Temperature_Voltage(); //Modify :2023.09.03 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
+			// Get_PTC_Temperature_Voltage(); //Modify :2023.09.03 Get_PTC_Temperature_Voltage(ADC_CHANNEL_1,10);
 	        
 
 		   }

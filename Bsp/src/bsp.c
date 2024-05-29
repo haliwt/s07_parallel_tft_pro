@@ -33,7 +33,7 @@ void bsp_Init(void)
 
    pro_t.mode_key_run_proc_item=0xff;
    wifi_t.gTimer_wifi_pub_power_off=60;
-   VOICE_OUTPUT_SOUND_ENABLE();
+  // VOICE_OUTPUT_SOUND_ENABLE();
 
    TimerTiming_Init();
 

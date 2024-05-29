@@ -5,11 +5,11 @@
 
 void Ultrasonic_Pwm_Output(void)
 {
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);//ultrasnoic On
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//ultrasnoic On
 
 }
 void Ultrasonic_Pwm_Stop(void)
 {
-     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);//ultrasnoic Off
+     HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);//ultrasnoic Off
 
 }

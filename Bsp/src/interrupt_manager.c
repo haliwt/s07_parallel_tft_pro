@@ -24,7 +24,7 @@ void USART_Cmd_Error_Handler(void)
 			gctl_t.gTimer_ctl_usart1_error=0;
 			  __HAL_UART_CLEAR_OREFLAG(&huart2);
 	        
-	          temp = USART2->DR;
+	          temp = USART2->RDR;
 	     
 	         HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
 			 // UART_Start_Receive_IT(&huart1,inputBuf,1);
@@ -39,9 +39,9 @@ void USART_Cmd_Error_Handler(void)
 
         
 
-          temp = USART1->DR;
+          temp = USART1->RDR;
 		 
-		    HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
+		    HAL_UART_Receive_IT(&huart1,wifi_t.usart2_dataBuf,1);
 		
      }
 
@@ -50,13 +50,6 @@ void USART_Cmd_Error_Handler(void)
 		   flag_dma1_tx_state = HAL_DMA_GetState(&hdma_spi1_tx);
 	      // flag_dma1_rx_state = HAL_DMA_GetState(&hdma_spi1_rx);
 	 
-		   if(flag_dma1_tx_state ==HAL_DMA_STATE_ERROR){
-		   	   TFT_BACKLIGHT_OFF();
-  			   TFT_LCD_Init();
-		   	   Update_DHT11_Value();
-		       TFT_Display_Handler();
-			   TFT_BACKLIGHT_ON();
-		   }
 	 }
 }
 /********************************************************************************
@@ -73,15 +66,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     
    
     //wifi usart1 --wifi 
-    if(huart->Instance==USART1)
+    if(huart->Instance==USART2)
     {
            
 	  if(wifi_t.linking_tencent_cloud_doing  ==1){ //link tencent netware of URL
 
-			wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
+			wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
 			wifi_t.wifi_uart_counter++;
 
-			if(*wifi_t.usart1_dataBuf==0X0A) // 0x0A = "\n"
+			if(*wifi_t.usart2_dataBuf==0X0A) // 0x0A = "\n"
 			{
 				//wifi_t.usart2_rx_flag = 1;
 				Wifi_Rx_Link_Net_InputInfo_Handler();
@@ -92,15 +85,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		  else{
 
 		         if(wifi_t.get_rx_beijing_time_enable==1){
-					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
+					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
 					wifi_t.wifi_uart_counter++;
 				}
 				else if(wifi_t.get_rx_auto_repeat_net_enable ==1){
 
-					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart1_dataBuf[0];
+					wifi_t.wifi_data[wifi_t.wifi_uart_counter] = wifi_t.usart2_dataBuf[0];
 					wifi_t.wifi_uart_counter++;
 
-					if(*wifi_t.usart1_dataBuf==0X0A) // 0x0A = "\n"
+					if(*wifi_t.usart2_dataBuf==0X0A) // 0x0A = "\n"
 					{
 						
 						Wifi_Rx_Auto_Link_Net_Handler();
@@ -118,15 +111,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	  
 //	__HAL_UART_CLEAR_NEFLAG(&huart1);
 //	__HAL_UART_CLEAR_FEFLAG(&huart1);
-	__HAL_UART_CLEAR_OREFLAG(&huart1);
+	__HAL_UART_CLEAR_OREFLAG(&huart2);
 //	__HAL_UART_CLEAR_IDLEFLAG(&huart1);
 	//__HAL_UART_CLEAR_TXFECF(&huart2);
-	 HAL_UART_Receive_IT(&huart1,wifi_t.usart1_dataBuf,1);
+	 HAL_UART_Receive_IT(&huart2,wifi_t.usart2_dataBuf,1);
      
 	}
 
 
-  if(huart->Instance==USART2){
+  if(huart->Instance==USART1){
 
 		switch(state_uart1)
 		{
@@ -282,7 +275,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	 
 	  }
 
-	HAL_UART_Receive_IT(&huart2,voice_inputBuf,1);//UART receive data interrupt 1 byte
+	HAL_UART_Receive_IT(&huart1,voice_inputBuf,1);//UART receive data interrupt 1 byte
 
 	}
 	
@@ -310,7 +303,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  
 
     
-   if(htim->Instance==TIM10){
+   if(htim->Instance==TIM17){
     
     tm0++;  //1ms
     tm1++;

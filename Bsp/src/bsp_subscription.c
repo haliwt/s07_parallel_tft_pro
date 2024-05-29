@@ -90,7 +90,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 	if(wifi_t.rx_error_codes_flag == 1){
 
-	      wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart1_dataBuf[0];
+	      wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart2_dataBuf[0];
 
 		rx_counter ++;
 		
@@ -118,7 +118,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       case 0:  //#0
 
             
-         if((wifi_t.usart1_dataBuf[0]== '"') ||wifi_t.usart1_dataBuf[0]=='+') //hex :54 - "T" -fixed
+         if((wifi_t.usart2_dataBuf[0]== '"') ||wifi_t.usart2_dataBuf[0]=='+') //hex :54 - "T" -fixed
             wifi_t.rx_data_state=1; //=1
           else{
                wifi_t.rx_counter=0;
@@ -129,7 +129,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
       case 1:
       
-         if((wifi_t.usart1_dataBuf[0]== 'p')  ||wifi_t.usart1_dataBuf[0]=='T')//hex :54 - "T" -fixed
+         if((wifi_t.usart2_dataBuf[0]== 'p')  ||wifi_t.usart2_dataBuf[0]=='T')//hex :54 - "T" -fixed
             wifi_t.rx_data_state=2; //=1
           else{
                wifi_t.rx_counter=0;
@@ -138,7 +138,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
             
          break;
       case 2: //#1
-             if((wifi_t.usart1_dataBuf[0]== 'a')||wifi_t.usart1_dataBuf[0]=='C')  //hex :4B - "K" -fixed
+             if((wifi_t.usart2_dataBuf[0]== 'a')||wifi_t.usart2_dataBuf[0]=='C')  //hex :4B - "K" -fixed
             wifi_t.rx_data_state=3; //=1
          else{
             wifi_t.rx_data_state =0;
@@ -147,7 +147,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
          break;
             
         case 3:
-            if((wifi_t.usart1_dataBuf[0]== 'r')||wifi_t.usart1_dataBuf[0]=='M')    //hex :4B - "K" -fixed
+            if((wifi_t.usart2_dataBuf[0]== 'r')||wifi_t.usart2_dataBuf[0]=='M')    //hex :4B - "K" -fixed
             wifi_t.rx_data_state=4; //=1
          else{
            wifi_t.rx_data_state =0;
@@ -157,7 +157,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
         break;
         
         case 4:
-            if((wifi_t.usart1_dataBuf[0]== 'a')  ||wifi_t.usart1_dataBuf[0]=='Q')  //hex :4B - "K" -fixed
+            if((wifi_t.usart2_dataBuf[0]== 'a')  ||wifi_t.usart2_dataBuf[0]=='Q')  //hex :4B - "K" -fixed
             wifi_t.rx_data_state=5; //=1
          else{
             wifi_t.rx_data_state =0;
@@ -167,7 +167,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
         break;
 
       case 5:
-       if((wifi_t.usart1_dataBuf[0]== 'm') ||wifi_t.usart1_dataBuf[0]=='T')   //hex :4B - "K" -fixed
+       if((wifi_t.usart2_dataBuf[0]== 'm') ||wifi_t.usart2_dataBuf[0]=='T')   //hex :4B - "K" -fixed
          wifi_t.rx_data_state=6; //=1
          else{
            wifi_t.rx_data_state=0;
@@ -178,7 +178,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
       
       case 6:
-       if((wifi_t.usart1_dataBuf[0]== 's')||wifi_t.usart1_dataBuf[0]=='T')    //hex :4B - "K" -fixed
+       if((wifi_t.usart2_dataBuf[0]== 's')||wifi_t.usart2_dataBuf[0]=='T')    //hex :4B - "K" -fixed
          wifi_t.rx_data_state=7; //=1
          else{
            wifi_t.rx_data_state =0;
@@ -188,10 +188,10 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
       case 7:
-       if((wifi_t.usart1_dataBuf[0]== '"')||wifi_t.usart1_dataBuf[0]=='R' ||wifi_t.usart1_dataBuf[0]=='C' ){  //hex :4B - "K" -fixed
+       if((wifi_t.usart2_dataBuf[0]== '"')||wifi_t.usart2_dataBuf[0]=='R' ||wifi_t.usart2_dataBuf[0]=='C' ){  //hex :4B - "K" -fixed
          wifi_t.rx_data_state=8; //=1
     	}
-		else if(wifi_t.usart1_dataBuf[0]==':' ){
+		else if(wifi_t.usart2_dataBuf[0]==':' ){
 
              wifi_t.rx_data_state=8;
 			 
@@ -204,7 +204,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
        case 8:
-       if((wifi_t.usart1_dataBuf[0]== ':') ||wifi_t.usart1_dataBuf[0]=='E' ||wifi_t.usart1_dataBuf[0]=='O' ) //hex :4B - "K" -fixed
+       if((wifi_t.usart2_dataBuf[0]== ':') ||wifi_t.usart2_dataBuf[0]=='E' ||wifi_t.usart2_dataBuf[0]=='O' ) //hex :4B - "K" -fixed
          wifi_t.rx_data_state=9; //=1
          else{
            wifi_t.rx_data_state =0;
@@ -217,7 +217,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
       case 9:
-       if((wifi_t.usart1_dataBuf[0]== '{') ||wifi_t.usart1_dataBuf[0]=='C' ||wifi_t.usart1_dataBuf[0]=='N'){ //hex :4B - "K" -fixed
+       if((wifi_t.usart2_dataBuf[0]== '{') ||wifi_t.usart2_dataBuf[0]=='C' ||wifi_t.usart2_dataBuf[0]=='N'){ //hex :4B - "K" -fixed
          wifi_t.rx_data_state=10; //=1
        	}
          else{
@@ -231,12 +231,12 @@ void Subscribe_Rx_Interrupt_Handler(void)
         
          if(wifi_t.rx_data_success==0){
 		 	
-         	wifi_t.wifi_data[wifi_t.rx_counter] = wifi_t.usart1_dataBuf[0];
+         	wifi_t.wifi_data[wifi_t.rx_counter] = wifi_t.usart2_dataBuf[0];
             wifi_t.rx_counter++ ;
 	
 		    
             
-         if(wifi_t.usart1_dataBuf[0]=='}' || wifi_t.usart1_dataBuf[0]==0x0A) //0x7D='}', 0x0A = line feed // end
+         if(wifi_t.usart2_dataBuf[0]=='}' || wifi_t.usart2_dataBuf[0]==0x0A) //0x7D='}', 0x0A = line feed // end
          {
             wifi_t.rx_data_success=1;
             wifi_t.rx_data_state=0;
@@ -245,7 +245,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
             
           
          }
-		 else if(wifi_t.usart1_dataBuf[0]=='O' || wifi_t.usart1_dataBuf[0]=='N'){ //auto reconect be detected 
+		 else if(wifi_t.usart2_dataBuf[0]=='O' || wifi_t.usart2_dataBuf[0]=='N'){ //auto reconect be detected 
 
                   wifi_t.rx_data_state=11; //=1
 
@@ -268,7 +268,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 
 	  case 11:
-		if(wifi_t.usart1_dataBuf[0]=='N' ||wifi_t.usart1_dataBuf[0]==':'){
+		if(wifi_t.usart2_dataBuf[0]=='N' ||wifi_t.usart2_dataBuf[0]==':'){
 		
 			wifi_t.rx_data_state=12; //=1
 		
@@ -282,7 +282,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
       case 12:
-		if(wifi_t.usart1_dataBuf[0]=='N' || wifi_t.usart1_dataBuf[0]=='O'){
+		if(wifi_t.usart2_dataBuf[0]=='N' || wifi_t.usart2_dataBuf[0]=='O'){
 		
 			wifi_t.rx_data_state=13; //=1
 		
@@ -296,13 +296,13 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 13:
-		if(wifi_t.usart1_dataBuf[0]=='E' ){
+		if(wifi_t.usart2_dataBuf[0]=='E' ){
 		
 			wifi_t.rx_data_state=14; //=1
 		
 		
 		}
-		else if(wifi_t.usart1_dataBuf[0]=='K'){
+		else if(wifi_t.usart2_dataBuf[0]=='K'){
 
 
            // wifi_t.wifi_reconnect_read_flag = 0;
@@ -318,7 +318,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 14:
-		if(wifi_t.usart1_dataBuf[0]=='C'){
+		if(wifi_t.usart2_dataBuf[0]=='C'){
 		
 			wifi_t.rx_data_state=15; //=1
 		
@@ -332,7 +332,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 15:
-		if(wifi_t.usart1_dataBuf[0]=='T'){
+		if(wifi_t.usart2_dataBuf[0]=='T'){
 		
 			wifi_t.rx_data_state=16; //=1
 		
@@ -346,7 +346,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 16:
-		if(wifi_t.usart1_dataBuf[0]=='I'){
+		if(wifi_t.usart2_dataBuf[0]=='I'){
 		
 			wifi_t.rx_data_state=17; //=1
 		
@@ -360,7 +360,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 17:
-		if(wifi_t.usart1_dataBuf[0]=='N'){
+		if(wifi_t.usart2_dataBuf[0]=='N'){
 		
 				wifi_t.rx_data_state=18; //=1
 		
@@ -374,7 +374,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
       break;
 
 	  case 18:
-		if(wifi_t.usart1_dataBuf[0]=='G'){
+		if(wifi_t.usart2_dataBuf[0]=='G'){
 		
 			//wifi_t.wifi_reconnect_read_flag = 1;
 		    wifi_t.rx_data_state =0;
@@ -396,7 +396,7 @@ void Subscribe_Rx_Interrupt_Handler(void)
 
 	
    if(wifi_t.rx_counter ==0 && wifi_t.rx_error_codes_flag == 0){
-   		wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart1_dataBuf[0];
+   		wifi_t.wifi_temp_data[rx_counter] = wifi_t.usart2_dataBuf[0];
 
 		 rx_counter ++;
 		 if(strstr((char*)wifi_t.wifi_temp_data,"+CME ERROR:208")){
@@ -994,9 +994,9 @@ void Wifi_Rx_Beijing_Time_Handler(void)
       case 0:  //#0
 
             
-         if(wifi_t.usart1_dataBuf[0]== 0x01 || wifi_t.usart1_dataBuf[0]== 0x02 ||wifi_t.usart1_dataBuf[0]== 0x03 ||wifi_t.usart1_dataBuf[0]== 0x04 
-		 	|| wifi_t.usart1_dataBuf[0]== 0x05 ||wifi_t.usart1_dataBuf[0]== 0x06 ||wifi_t.usart1_dataBuf[0]== 0x07 ||wifi_t.usart1_dataBuf[0]== 0x08 
-		 	|| wifi_t.usart1_dataBuf[0]== 0x09 ||wifi_t.usart1_dataBuf[0]== 0x0a ||wifi_t.usart1_dataBuf[0]== 0x0b ||wifi_t.usart1_dataBuf[0]== 0x0c ){ 
+         if(wifi_t.usart2_dataBuf[0]== 0x01 || wifi_t.usart2_dataBuf[0]== 0x02 ||wifi_t.usart2_dataBuf[0]== 0x03 ||wifi_t.usart2_dataBuf[0]== 0x04 
+		 	|| wifi_t.usart2_dataBuf[0]== 0x05 ||wifi_t.usart2_dataBuf[0]== 0x06 ||wifi_t.usart2_dataBuf[0]== 0x07 ||wifi_t.usart2_dataBuf[0]== 0x08 
+		 	|| wifi_t.usart2_dataBuf[0]== 0x09 ||wifi_t.usart2_dataBuf[0]== 0x0a ||wifi_t.usart2_dataBuf[0]== 0x0b ||wifi_t.usart2_dataBuf[0]== 0x0c ){ 
              wifi_t.rx_data_state=1; //=1
 		  }
 		  else{
@@ -1008,7 +1008,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
          break;
 
 	  case 1:
-	  	 if(wifi_t.usart1_dataBuf[0]== ' ')
+	  	 if(wifi_t.usart2_dataBuf[0]== ' ')
 		  	 wifi_t.rx_data_state=2; //=1
 		  else{
 		      wifi_t.rx_data_state=0; //=1
@@ -1018,12 +1018,12 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 
       case 2:
       
-           wifi_t.real_hours=wifi_t.usart1_dataBuf[0];
+           wifi_t.real_hours=wifi_t.usart2_dataBuf[0];
            wifi_t.rx_data_state=3; //=1
          break;
 
 	  case 3:
-	  	  if(wifi_t.usart1_dataBuf[0]== ':')
+	  	  if(wifi_t.usart2_dataBuf[0]== ':')
 		  	 wifi_t.rx_data_state=4; //=1
 		  else{
 		      wifi_t.rx_data_state=0; //=1
@@ -1032,13 +1032,13 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 	  	break;
       case 4: //#1
       
-            wifi_t.real_minutes = wifi_t.usart1_dataBuf[0];
+            wifi_t.real_minutes = wifi_t.usart2_dataBuf[0];
             wifi_t.rx_data_state=5; //=1
        
          break;
 
 	  case 5:
-	  	 if(wifi_t.usart1_dataBuf[0]== ':')
+	  	 if(wifi_t.usart2_dataBuf[0]== ':')
 		  	 wifi_t.rx_data_state=6; //=1
 		  else{
 		      wifi_t.rx_data_state=0; //=1
@@ -1047,7 +1047,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 	  break;
             
         case 6:
-           wifi_t.real_seconds = wifi_t.usart1_dataBuf[0];
+           wifi_t.real_seconds = wifi_t.usart2_dataBuf[0];
            wifi_t.rx_data_state=7; //=1
            
            
@@ -1055,7 +1055,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
         break;
 
 		case 7:
-			if(wifi_t.usart1_dataBuf[0]== ' ')
+			if(wifi_t.usart2_dataBuf[0]== ' ')
 		  	 wifi_t.rx_data_state=8; //=1
 		  else{
 		      wifi_t.rx_data_state=0; //=1
@@ -1065,7 +1065,7 @@ void Wifi_Rx_Beijing_Time_Handler(void)
 		break;
 		  
 		case 8:
-		if(wifi_t.usart1_dataBuf[0]==20){
+		if(wifi_t.usart2_dataBuf[0]==20){
 			wifi_t.get_rx_beijing_time_enable=0 ;
 			wifi_t.rx_data_state=0; //=1
 			
