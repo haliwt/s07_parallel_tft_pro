@@ -1,0 +1,2 @@
+# s07_parallel_tft_pro
+TFT_s07_8080_pro
