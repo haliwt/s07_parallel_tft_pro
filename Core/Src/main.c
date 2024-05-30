@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "adc.h"
 #include "iwdg.h"
 #include "tim.h"
@@ -52,6 +53,7 @@ uint8_t keyvalue;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -113,6 +115,13 @@ int main(void)
   pro_t.buzzer_sound_flag=1;
   /* USER CODE END 2 */
 
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -121,7 +130,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	
-
+#if 0
 	bsp_Idle();
 
     Key_Speical_Power_Fun_Handler();
@@ -137,6 +146,7 @@ int main(void)
 	TFT_Process_Handler();
     WIFI_Process_Handler();
 	USART_Cmd_Error_Handler();
+    #endif 
   }
   /* USER CODE END 3 */
 }
